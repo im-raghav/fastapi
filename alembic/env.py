@@ -14,12 +14,16 @@ from app.config import settings
 config = context.config
 config.set_main_option(
     "sqlalchemy.url",
-    f"postgresql://{settings.DATABASE_USERNAME}:"
-    f"{settings.DATABASE_PASSWORD}@"
-    f"{settings.DATABASE_HOSTNAME}:"
-    f"{settings.DATABASE_PORT}/"
-    f"{settings.DATABASE_NAME}"
+    settings.DATABASE_URL
 )
+# config.set_main_option(
+#     "sqlalchemy.url",
+#     f"postgresql://{settings.DATABASE_USERNAME}:"
+#     f"{settings.DATABASE_PASSWORD}@"
+#     f"{settings.DATABASE_HOSTNAME}:"
+#     f"{settings.DATABASE_PORT}/"
+#     f"{settings.DATABASE_NAME}"
+# )
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
