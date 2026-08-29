@@ -1,0 +1,9 @@
+services:
+  fast-api:
+    image: imraghav/fastapi:latest
+    container_name: fast-api
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
