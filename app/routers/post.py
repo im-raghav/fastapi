@@ -50,13 +50,13 @@ def update_post(id: int, post: schemas.PostCreate, db:Session=Depends(get_db), c
     # connection.commit()
     post_query = db.query(models.Post).filter(models.Post.id == id)
     updated_post = post_query.first()
+    if updated_post is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with given id:{id} doesnt exist.")
     if (current_user.id != updated_post.owner_id):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="FORBIDDEN")
     post_query.update(post.model_dump())
     db.commit()
     db.refresh(updated_post)
-    if updated_post is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with given id:{id} doesnt exist.")
     return updated_post
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -66,11 +66,10 @@ def delete_post(id: int, db:Session = Depends(get_db), current_user = Depends(ge
     # connection.commit()
     delete_query = db.query(models.Post).filter(models.Post.id == id)
     post_to_be_deleted = delete_query.first()
+    if post_to_be_deleted is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with given id:{id} doesnt exist.")
     if (current_user.id != post_to_be_deleted.owner_id):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="FORBIDDEN")
-    deleted_count = delete_query.delete()
+    delete_query.delete()
     db.commit()
-
-    if deleted_count == 0:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with given id:{id} doesnt exist.")
 
